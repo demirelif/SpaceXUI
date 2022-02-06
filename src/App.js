@@ -1,17 +1,10 @@
 import React from 'react';
-import { toast } from "react-toastify";
 import {
-  Button,
   Container,
   Grid,
   Header,
   Segment,
-  Dropdown,
-    Popup,
-
 } from "semantic-ui-react";
-import axios from 'axios'
-import * as PropTypes from "prop-types";
 
 class App extends React.Component {
   constructor(props) {
@@ -36,9 +29,7 @@ class App extends React.Component {
     };
   };
 
-
     componentDidMount = async () => {
-        toast("Hello??")
         this.getNoOfSuccessfulLaunches()
         this.getCompanyInfo()
         this.getNoOfSuccessfulLaunches()
@@ -48,7 +39,6 @@ class App extends React.Component {
         this.getLatestLaunch();
         this.getAverageMassOfRockets();
         this.gettotalTimeInSpace();
-       // this.getTotalNumberOfLaunchesFromLaunchpad();
         this.getLaunchpads();
         this.getLaunchPatchPhoto();
         this.getLaunchImage();
@@ -81,13 +71,10 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ companyInfo: data.summary });
             })
             .catch((e) => {
-                toast.error(e.message);
+
             });
     };
 
@@ -114,13 +101,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ noOfSuccessfulLaunches: data });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -147,13 +130,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ noOfUnsuccessfulLaunches: data });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
     getNumberOfPeopleSentToSpace = () => {
@@ -179,13 +158,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ totalNumberOfPeopleSentToSpace: data });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -212,13 +187,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ nextLaunchFLightName: data.name });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -245,13 +216,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ latestLaunchFlightName: data.name });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -278,13 +245,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ totalTimeInSpace: data });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -312,13 +275,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ averageMassOfRockets: data });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -345,13 +304,9 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-
-                toast.info(`The data is ${data.totalElements}.`);
-
                 this.setState({ totalNumberOfLaunchesFromLaunchpad: data });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -384,7 +339,6 @@ class App extends React.Component {
                 }
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -416,7 +370,6 @@ class App extends React.Component {
                 }
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -446,7 +399,6 @@ class App extends React.Component {
                 this.setState({ launchPatchPhoto: data });
             })
             .catch((e) => {
-                toast.error(e.message);
             });
     };
 
@@ -477,7 +429,6 @@ class App extends React.Component {
             })
             .catch((e) => {
                 console.log("error?" + e.message)
-                toast.error(e.message);
             });
     };
 
@@ -510,7 +461,6 @@ class App extends React.Component {
             })
             .catch((e) => {
                 console.log("error?" + e.message)
-                toast.error(e.message);
             });
     };
   render() {
