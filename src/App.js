@@ -13,40 +13,29 @@ class App extends React.Component {
         companyInfo: "",
         noOfSuccessfulLaunches: 0,
         noOfUnsuccessfulLaunchesNo: 0,
-        totalNumberOfLaunchesFromLaunchpad: 0,
-        totalNumberOfPeopleSentToSpace: 0,
+        totalNumberOfPeopleInCrew: 0,
         totalTimeInSpace: 0,
         averageMassOfRockets: 0,
-        launches: [],
+        totalNoOfLaunches: 0,
         latestLaunchFlightName: "",
         nextLaunchFlightName: "",
-        imageUrl: "",
-        userLandpathName: "",
-        launchpads:  [],
-        launchpadId: "",
-        totalNoOfLaunches: 5,
         value:''
     };
   };
 
     componentDidMount = async () => {
-        this.getNoOfSuccessfulLaunches()
         this.getCompanyInfo()
         this.getNoOfSuccessfulLaunches()
         this.getNoOfUnsuccessfulLaunches()
-        this.getNumberOfPeopleSentToSpace();
-        this.getNextLaunch();
+        this.getNumberOfPeopleInCrew()
+        this.getTotalTimeInSpace()
+        this.getAverageMassOfRockets()
+        this.getNextLaunch()
         this.getLatestLaunch();
-        this.getAverageMassOfRockets();
-        this.gettotalTimeInSpace();
         this.getLaunchpads();
-        this.getLaunchPatchPhoto();
-       // this.getLaunchImage();
     };
 
-    dummyData = [];
-    launchImageData = [];
-
+    launchpadsList = [];
 
     getCompanyInfo = () => {
         fetch(
@@ -77,7 +66,6 @@ class App extends React.Component {
 
             });
     };
-
     getNoOfSuccessfulLaunches = () => {
         fetch(
             "http://localhost:8080/no-of-successful-launches",
@@ -135,9 +123,10 @@ class App extends React.Component {
             .catch((e) => {
             });
     };
-    getNumberOfPeopleSentToSpace = () => {
+
+    getNumberOfPeopleInCrew= () => {
         fetch(
-            "http://localhost:8080/total-people-in-space",
+            "http://localhost:8080/total-people-in-crew",
             {
                 method: "GET",
                 headers: {
@@ -158,7 +147,153 @@ class App extends React.Component {
                 return r.json();
             })
             .then((data) => {
-                this.setState({ totalNumberOfPeopleSentToSpace: data });
+                this.setState({ totalNumberOfPeopleInCrew: data });
+            })
+            .catch((e) => {
+            });
+    };
+
+    getTotalTimeInSpace= () => {
+        fetch(
+            "http://localhost:8080/total-time",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+            }
+        )
+            .then((r) => {
+                if (r.ok) {
+                    return r;
+                }
+                if (r.status === 401 || r.status === 403 || r.status === 500) {
+                    return Promise.reject(new Error("Something went wrong"));
+                }
+            })
+            .then((r) => {
+                return r.json();
+            })
+            .then((data) => {
+                this.setState({ totalTimeInSpace: data });
+            })
+            .catch((e) => {
+            });
+    };
+
+    getAverageMassOfRockets= () => {
+        fetch(
+            "http://localhost:8080/average-mass-of-rockets",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+            }
+        )
+            .then((r) => {
+                if (r.ok) {
+                    return r;
+                }
+                if (r.status === 401 || r.status === 403 || r.status === 500) {
+                    return Promise.reject(new Error("Something went wrong"));
+                }
+            })
+            .then((r) => {
+                return r.json();
+            })
+            .then((data) => {
+                this.setState({ averageMassOfRockets: data });
+            })
+            .catch((e) => {
+            });
+    };
+
+    getLaunchpads= () => {
+        fetch(
+            "http://localhost:8080/launchpads",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+            }
+        )
+            .then((r) => {
+                if (r.ok) {
+                    return r;
+                }
+                if (r.status === 401 || r.status === 403 || r.status === 500) {
+                    return Promise.reject(new Error("Something went wrong"));
+                }
+            })
+            .then((r) => {
+                return r.json();
+            })
+            .then((data) => {
+                for(let i of data){
+                    this.launchpadsList.push({value: i.id,key: i.name});
+                }
+            })
+            .catch((e) => {
+            });
+    };
+
+    getLaunchesFromLaunchpad = (userId) => {
+        let launchId = userId.target.value;
+        fetch(
+            `http://localhost:8080/total-number-of-launches-from-launchpad?id=${launchId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        ).then((r) => {
+            if (r.ok) {
+                return r;
+            }
+            if (r.status === 401 || r.status === 403 || r.status === 500 || r.status === 404) {
+                return Promise.reject(new Error("Something went wrong"));
+            }
+        }).then((r) => {
+            return r.json();
+        })
+            .then((data) => {
+                this.setState({ totalNoOfLaunches: data });
+            })
+            .catch((e) => {
+            });
+    };
+
+
+    getLatestLaunch= () => {
+        fetch(
+            "http://localhost:8080/latest-launch",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+            }
+        )
+            .then((r) => {
+                if (r.ok) {
+                    return r;
+                }
+                if (r.status === 401 || r.status === 403 || r.status === 500) {
+                    return Promise.reject(new Error("Something went wrong"));
+                }
+            })
+            .then((r) => {
+                return r.json();
+            })
+            .then((data) => {
+                this.setState({ latestLaunchFlightName: data.name });
             })
             .catch((e) => {
             });
@@ -193,290 +328,25 @@ class App extends React.Component {
             });
     };
 
-    getLatestLaunch= () => {
-        fetch(
-            "http://localhost:8080/latest-launch",
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-            }
-        )
-            .then((r) => {
-                if (r.ok) {
-                    return r;
-                }
-                if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("Something went wrong"));
-                }
-            })
-            .then((r) => {
-                return r.json();
-            })
-            .then((data) => {
-                this.setState({ latestLaunchFlightName: data.name });
-            })
-            .catch((e) => {
-            });
-    };
-
-    gettotalTimeInSpace= () => {
-        fetch(
-            "http://localhost:8080/total-time",
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-            }
-        )
-            .then((r) => {
-                if (r.ok) {
-                    return r;
-                }
-                if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("Something went wrong"));
-                }
-            })
-            .then((r) => {
-                return r.json();
-            })
-            .then((data) => {
-                this.setState({ totalTimeInSpace: data });
-            })
-            .catch((e) => {
-            });
-    };
-
-
-    getAverageMassOfRockets= () => {
-        fetch(
-            "http://localhost:8080/average-mass-of-rockets",
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-            }
-        )
-            .then((r) => {
-                if (r.ok) {
-                    return r;
-                }
-                if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("Something went wrong"));
-                }
-            })
-            .then((r) => {
-                return r.json();
-            })
-            .then((data) => {
-                this.setState({ averageMassOfRockets: data });
-            })
-            .catch((e) => {
-            });
-    };
-
-    getTotalNumberOfLaunchesFromLaunchpad= () => {
-        fetch(
-            "http://localhost:8080/total-number-of-launches-from-launchpad",
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-            }
-        )
-            .then((r) => {
-                if (r.ok) {
-                    return r;
-                }
-                if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("Something went wrong"));
-                }
-            })
-            .then((r) => {
-                return r.json();
-            })
-            .then((data) => {
-                this.setState({ totalNumberOfLaunchesFromLaunchpad: data });
-            })
-            .catch((e) => {
-            });
-    };
-
-
-    getLaunchpads= () => {
-        fetch(
-            "http://localhost:8080/launchpads",
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-            }
-        )
-            .then((r) => {
-                if (r.ok) {
-                    return r;
-                }
-                if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("Something went wrong"));
-                }
-            })
-            .then((r) => {
-                return r.json();
-            })
-            .then((data) => {
-                for(let i of data){
-                    this.dummyData.push({value: i.id,key: i.name});
-                }
-            })
-            .catch((e) => {
-            });
-    };
-
-    getLaunchImage= () => {
-        fetch(
-            "http://localhost:8080/launch-details-list",
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-            }
-        )
-            .then((r) => {
-                if (r.ok) {
-                    return r;
-                }
-                if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("Something went wrong"));
-                }
-            })
-            .then((r) => {
-                return r.json();
-            })
-            .then((data) => {
-                for(let i of data){
-                    this.launchImageData.push({value: i.id,key: i.name});
-                }
-            })
-            .catch((e) => {
-            });
-    };
-
-    getLaunchPatchPhoto= () => {
-        fetch(
-            "http://localhost:8080/launch-patch",
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-            }
-        )
-            .then((r) => {
-                if (r.ok) {
-                    return r;
-                }
-                if (r.status === 401 || r.status === 403 || r.status === 500) {
-                    return Promise.reject(new Error("Something went wrong"));
-                }
-            })
-            .then((r) => {
-                return r.json();
-            })
-            .then((data) => {
-                this.setState({ launchPatchPhoto: data });
-            })
-            .catch((e) => {
-            });
-    };
-
-    getLaunchesFromLaunchpad = (userId) => {
-        let launchId = userId.target.value;
-        fetch(
-            `http://localhost:8080/total-number-of-launches-from-launchpad?id=${launchId}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        ).then((r) => {
-            if (r.ok) {
-                return r;
-            }
-            if (r.status === 401 || r.status === 403 || r.status === 500 || r.status === 404) {
-                return Promise.reject(new Error("Something went wrong"));
-            }
-        }).then((r) => {
-            return r.json();
-        })
-            .then((data) => {
-                this.setState({ totalNoOfLaunches: data });
-            })
-            .catch((e) => {
-            });
-    };
-
-
-    getImage = (userLaunchId) => {
-        let launchId = userLaunchId.target.value;
-        fetch(
-            `http://localhost:8080/launch-details?id=${launchId}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        ).then((r) => {
-            if (r.ok) {
-                return r;
-            }
-            if (r.status === 401 || r.status === 403 || r.status === 500 || r.status === 404) {
-                return Promise.reject(new Error("Something went wrong"));
-            }
-        }).then((r) => {
-            return r.json();
-        })
-            .then((data) => {
-                this.setState({ imageUrl: data });
-
-            })
-            .catch((e) => {
-            });
-    };
   render() {
       return (
         <div className="App">
           <Container>
             <Segment clearing>
               <Header as="h2" content="Device Visibility" >
-
                 <Grid columns={16}>
                   <Grid.Column only="large screen" largeScreen={100}>
                     <h1> Space X </h1>
                       <p style={{ color: 'blue' }}> {this.state.companyInfo}</p>
-                      <p> {this.state.noOfSuccessfulLaunches} number of successful launches and {this.state.noOfUnsuccessfulLaunches}  number of unsuccessful launches </p>
-                      <p> Total number of people that are sent to space is {this.state.totalNumberOfPeopleSentToSpace} </p>
-                      <p> Total time in space of all crew-dragon flight is {this.state.totalTimeInSpace} years </p>
+                      <p> The number of successful launches is {this.state.noOfSuccessfulLaunches} and the number of unsuccessful launches is {this.state.noOfUnsuccessfulLaunches}   </p>
+                      <p> Total number of people in the crew is {this.state.totalNumberOfPeopleInCrew} </p>
+                      <p> Total time in space of all crew-dragon flights is {this.state.totalTimeInSpace} years </p>
                       <p> Average mass of all rockets is {this.state.averageMassOfRockets} kilograms. </p>
                       <div>
                           <label>
                               Total number of launches from
                               <select onChange={this.getLaunchesFromLaunchpad}>
-                                  {this.dummyData.map((option) => (
+                                  {this.launchpadsList.map((option) => (
                                       <option value={option.value}>{option.key}</option>
                                   ))}
                               </select>
