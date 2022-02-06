@@ -25,7 +25,7 @@ class App extends React.Component {
         launchpads:  [],
         launchpadId: "",
         totalNoOfLaunches: 5,
-        value:'fruit'
+        value:''
     };
   };
 
@@ -41,7 +41,7 @@ class App extends React.Component {
         this.gettotalTimeInSpace();
         this.getLaunchpads();
         this.getLaunchPatchPhoto();
-        this.getLaunchImage();
+       // this.getLaunchImage();
     };
 
     dummyData = [];
@@ -423,19 +423,15 @@ class App extends React.Component {
             return r.json();
         })
             .then((data) => {
-                console.log("we neden yani ")
                 this.setState({ totalNoOfLaunches: data });
-                console.log(data)
             })
             .catch((e) => {
-                console.log("error?" + e.message)
             });
     };
 
 
     getImage = (userLaunchId) => {
         let launchId = userLaunchId.target.value;
-        console.log(launchId)
         fetch(
             `http://localhost:8080/launch-details?id=${launchId}`,
             {
@@ -455,12 +451,10 @@ class App extends React.Component {
             return r.json();
         })
             .then((data) => {
-                console.log(data)
                 this.setState({ imageUrl: data });
 
             })
             .catch((e) => {
-                console.log("error?" + e.message)
             });
     };
   render() {
@@ -475,7 +469,6 @@ class App extends React.Component {
                     <h1> Space X </h1>
                       <p style={{ color: 'blue' }}> {this.state.companyInfo}</p>
                       <p> {this.state.noOfSuccessfulLaunches} number of successful launches and {this.state.noOfUnsuccessfulLaunches}  number of unsuccessful launches </p>
-                      <p> Total number of launches from Launchpad {this.state.totalNumberOfLaunchesFromLaunchpad} hours </p>
                       <p> Total number of people that are sent to space is {this.state.totalNumberOfPeopleSentToSpace} </p>
                       <p> Total time in space of all crew-dragon flight is {this.state.totalTimeInSpace} years </p>
                       <p> Average mass of all rockets is {this.state.averageMassOfRockets} kilograms. </p>
